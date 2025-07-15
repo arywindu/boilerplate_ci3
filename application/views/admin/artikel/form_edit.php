@@ -6,20 +6,19 @@
         <input type="text" class="form-control" id="judul" name="judul" value="<?php echo set_value('judul', $artikel['judul']); ?>" required>
     </div>
     <div class="form-group">
-    <label for="id_kategori">Kategori</label>
-    <select class="form-control" id="id_kategori" name="id_kategori" required>
-        <option value="">Pilih Kategori</option>
-        <?php foreach ($kategori_list as $kategori): ?>
-            <option value="<?php echo $kategori['id']; ?>" <?php echo set_select('id_kategori', $kategori['id']); ?>>
-                <?php echo $kategori['nama_kategori']; ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
-</div>
+        <label for="id_kategori">Kategori</label>
+        <select class="form-control" id="id_kategori" name="id_kategori" required>
+            <option value="">Pilih Kategori</option>
+            <?php foreach ($kategori_list as $kategori): ?>
+                <option value="<?php echo $kategori['id']; ?>" <?php echo set_select('id_kategori', $kategori['id'], ($artikel['id_kategori'] == $kategori['id'])); ?>>
+                    <?php echo $kategori['nama_kategori']; ?> </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
     <div class="form-group">
         <label for="isi">Isi Artikel</label>
         <textarea class="form-control" id="isi" name="isi" rows="10" required><?php echo set_value('isi', $artikel['isi']); ?></textarea>
-        </div>
+    </div>
     <div class="form-group">
         <label for="gambar">Gambar (Kosongkan jika tidak ingin mengubah)</label>
         <input type="file" class="form-control-file" id="gambar" name="gambar">
