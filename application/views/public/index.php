@@ -7,7 +7,7 @@
         <?php foreach ($artikel as $item): ?>
             <div class="col-md-4 mb-4">
                 <div class="card">
-                    <?php if (!empty($item['gambar'])): ?>
+                    <?php if (! empty($item['gambar'])): ?>
                         <img src="<?php echo base_url('uploads/' . $item['gambar']); ?>" class="card-img-top" alt="<?php echo $item['judul']; ?>">
                     <?php endif; ?>
                     <div class="card-body">

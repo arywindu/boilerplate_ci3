@@ -1,8 +1,9 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Home extends CI_Controller {
+defined('BASEPATH') or exit('No direct script access allowed');
 
+class Home extends CI_Controller
+{
     public function __construct()
     {
         parent::__construct();
@@ -18,9 +19,9 @@ class Home extends CI_Controller {
         $this->load->view('public/templates/footer');
     }
 
-    public function detail($slug = NULL)
+    public function detail($slug = null)
     {
-        if ($slug === NULL) {
+        if ($slug === null) {
             show_404();
         }
 

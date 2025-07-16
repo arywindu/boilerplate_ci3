@@ -1,6 +1,6 @@
 <hr>
         <footer class="mt-4">
-            <p>&copy; <?php echo date('Y'); ?> Web Berita</p>
+            <p>&copy; <?php echo date('Y'); ?>Artikel</p>
         </footer>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

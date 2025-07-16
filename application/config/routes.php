@@ -1,5 +1,6 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------------
@@ -49,17 +50,32 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-$route['default_controller'] = 'home';
+$route['default_controller'] = 'home'; // Atau controller default Anda
 $route['artikel/(:any)'] = 'home/detail/$1';
 
-// Route untuk login
-$route['login'] = 'auth/login'; // Bisa diakses via /login atau /auth
-$route['auth'] = 'auth'; // Default ke method index di Auth (yang akan memanggil login)
-$route['auth/(:any)'] = 'auth/$1'; // Untuk method lain di controller Auth (misal: auth/logout)
+// --- Routing untuk Otentikasi (AUTH) ---
+// Pastikan ini ada jika Anda memiliki halaman login/logout terpisah
+$route['login'] = 'auth/login';
+$route['logout'] = 'auth/logout';
 
-// Proteksi area admin - otomatis akan diredirect oleh controller Admin jika belum login
-$route['admin'] = 'admin';
-$route['admin/(:any)'] = 'admin/$1';
+// Route khusus untuk ubah password
+// Ini akan memetakan URL 'ubah_password' langsung ke Auth controller, method ubah_password
+$route['ubah_password'] = 'auth/ubah_password';
+
+// Route umum untuk controller Auth (jika ada method lain di Auth yang diakses dengan slug)
+// Jika Anda hanya punya login, logout, ubah_password, ini mungkin tidak terlalu krusial
+// Tapi baiknya tetap ada untuk fleksibilitas
+$route['auth/(:any)'] = 'auth/$1';
+
+// --- Routing untuk Admin Area ---
+// Sesuaikan dengan struktur folder controller Anda
+$route['admin'] = 'Admin'; // Mengarah ke Admin controller di root controllers
+$route['admin/(:any)'] = 'Admin/$1'; // Untuk method lain di Admin controller
+
+// Jika Kategori_admin.php ada di controllers/admin/
+$route['admin/kategori_admin'] = 'admin/Kategori_admin';
+$route['admin/kategori_admin/(:any)'] = 'admin/Kategori_admin/$1';
+
 
 $route['404_override'] = '';
-$route['translate_uri_dashes'] = FALSE;
+$route['translate_uri_dashes'] = FALSE; // Biarkan FALSE kecuali Anda memang menggunakan dash di URI

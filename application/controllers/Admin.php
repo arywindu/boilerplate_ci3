@@ -1,12 +1,13 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Admin extends CI_Controller {
+defined('BASEPATH') or exit('No direct script access allowed');
 
+class Admin extends CI_Controller
+{
     public function __construct()
     {
         parent::__construct();
-        if (!$this->session->userdata('logged_in')) {
+        if (! $this->session->userdata('logged_in')) {
             $this->session->set_flashdata('error', 'Anda harus login untuk mengakses halaman ini.');
             redirect('auth/login');
         }
@@ -17,7 +18,7 @@ class Admin extends CI_Controller {
         $this->load->library('session');
         $this->load->library('pagination');
         // Pastikan library 'upload' juga dimuat jika belum di autoload
-        $this->load->library('upload'); 
+        $this->load->library('upload');
     }
 
     public function index()
@@ -27,7 +28,7 @@ class Admin extends CI_Controller {
 
         // --- Bagian Perbaikan Pencarian ---
         // Ambil keyword pencarian dari URL parameter (GET)
-        $keyword = $this->input->get('keyword', TRUE); // TRUE untuk XSS filtering
+        $keyword = $this->input->get('keyword', true); // TRUE untuk XSS filtering
         $data['keyword'] = $keyword; // Teruskan keyword ini ke view agar form pencarian bisa mengisi kembali nilai inputnya
         // --- Akhir Bagian Perbaikan Pencarian ---
 
@@ -46,7 +47,7 @@ class Admin extends CI_Controller {
 
         // Hitung total baris berdasarkan keyword (jika ada)
         // Fungsi count_all_artikel di model harus menerima parameter keyword
-        $config['total_rows'] = $this->Artikel_model->count_all_artikel($keyword); 
+        $config['total_rows'] = $this->Artikel_model->count_all_artikel($keyword);
 
         // Gaya Bootstrap untuk Paginasi
         $config['full_tag_open'] = '<ul class="pagination justify-content-center">';
@@ -63,7 +64,7 @@ class Admin extends CI_Controller {
         $config['first_tagl_close'] = '</span></li>';
         $config['last_tag_open'] = '<li class="page-item"><span class="page-link">';
         $config['last_tagl_close'] = '</span></li>';
-        $config['attributes'] = array('class' => 'page-link'); // Tambahkan class ke link
+        $config['attributes'] = ['class' => 'page-link']; // Tambahkan class ke link
 
         $this->pagination->initialize($config);
 
@@ -86,24 +87,24 @@ class Admin extends CI_Controller {
         $this->form_validation->set_rules('isi', 'Isi Artikel', 'required');
         $this->form_validation->set_rules('id_kategori', 'Kategori', 'required|numeric');
 
-        if ($this->form_validation->run() === FALSE) {
+        if ($this->form_validation->run() === false) {
             $this->load->view('admin/templates/header', $data);
             $this->load->view('admin/artikel/form_tambah', $data);
             $this->load->view('admin/templates/footer');
         } else {
             $judul = $this->input->post('judul');
-            $slug = url_title($judul, 'dash', TRUE);
+            $slug = url_title($judul, 'dash', true);
             $isi = $this->input->post('isi');
             $id_kategori = $this->input->post('id_kategori');
 
-            $config['upload_path']   = './uploads/';
+            $config['upload_path'] = './uploads/';
             $config['allowed_types'] = 'gif|jpg|png|jpeg';
-            $config['max_size']      = 2048; // 2MB
-            $config['file_name']     = $slug . '_' . time();
+            $config['max_size'] = 2048; // 2MB
+            $config['file_name'] = $slug . '_' . time();
 
             $this->upload->initialize($config); // Inisialisasi upload dengan config
 
-            $gambar = NULL;
+            $gambar = null;
             if ($this->upload->do_upload('gambar')) {
                 $upload_data = $this->upload->data();
                 $gambar = $upload_data['file_name'];
@@ -114,13 +115,13 @@ class Admin extends CI_Controller {
                 }
             }
 
-            $data_insert = array(
+            $data_insert = [
                 'judul' => $judul,
                 'slug' => $slug,
                 'isi' => $isi,
                 'gambar' => $gambar,
-                'id_kategori' => $id_kategori
-            );
+                'id_kategori' => $id_kategori,
+            ];
 
             $this->Artikel_model->tambah_artikel($data_insert);
             $this->session->set_flashdata('success', 'Artikel berhasil ditambahkan!');
@@ -128,9 +129,9 @@ class Admin extends CI_Controller {
         }
     }
 
-    public function edit($id = NULL)
+    public function edit($id = null)
     {
-        if ($id === NULL) {
+        if ($id === null) {
             show_404();
         }
 
@@ -146,34 +147,34 @@ class Admin extends CI_Controller {
         $this->form_validation->set_rules('isi', 'Isi Artikel', 'required');
         $this->form_validation->set_rules('id_kategori', 'Kategori', 'required|numeric');
 
-        if ($this->form_validation->run() === FALSE) {
+        if ($this->form_validation->run() === false) {
             $this->load->view('admin/templates/header', $data);
             $this->load->view('admin/artikel/form_edit', $data);
             $this->load->view('admin/templates/footer');
         } else {
             $judul = $this->input->post('judul');
-            $slug = url_title($judul, 'dash', TRUE);
+            $slug = url_title($judul, 'dash', true);
             $isi = $this->input->post('isi');
             $id_kategori = $this->input->post('id_kategori');
 
-            $data_update = array(
+            $data_update = [
                 'judul' => $judul,
                 'slug' => $slug,
                 'isi' => $isi,
-                'id_kategori' => $id_kategori
-            );
+                'id_kategori' => $id_kategori,
+            ];
 
             // Handle upload gambar jika ada perubahan
-            $config['upload_path']   = './uploads/';
+            $config['upload_path'] = './uploads/';
             $config['allowed_types'] = 'gif|jpg|png|jpeg';
-            $config['max_size']      = 2048;
-            $config['file_name']     = $slug . '_' . time();
+            $config['max_size'] = 2048;
+            $config['file_name'] = $slug . '_' . time();
 
             $this->upload->initialize($config); // Inisialisasi upload dengan config
 
             if ($this->upload->do_upload('gambar')) {
                 // Hapus gambar lama jika ada
-                if (!empty($data['artikel']['gambar']) && file_exists('./uploads/' . $data['artikel']['gambar'])) {
+                if (! empty($data['artikel']['gambar']) && file_exists('./uploads/' . $data['artikel']['gambar'])) {
                     unlink('./uploads/' . $data['artikel']['gambar']);
                 }
                 $upload_data = $this->upload->data();
@@ -191,9 +192,9 @@ class Admin extends CI_Controller {
         }
     }
 
-    public function hapus($id = NULL)
+    public function hapus($id = null)
     {
-        if ($id === NULL) {
+        if ($id === null) {
             show_404();
         }
 
@@ -204,7 +205,7 @@ class Admin extends CI_Controller {
         }
 
         // Hapus gambar terkait jika ada
-        if (!empty($artikel['gambar']) && file_exists('./uploads/' . $artikel['gambar'])) {
+        if (! empty($artikel['gambar']) && file_exists('./uploads/' . $artikel['gambar'])) {
             unlink('./uploads/' . $artikel['gambar']);
         }
 

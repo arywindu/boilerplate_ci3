@@ -1,47 +1,76 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Kategori_model extends CI_Model {
+defined('BASEPATH') or exit('No direct script access allowed');
 
+class Kategori_model extends CI_Model
+{
     public function __construct()
     {
         parent::__construct();
-        $this->load->database();
+        $this->load->database(); // Memuat database di konstruktor model
+         if (!$this->session->userdata('logged_in')) {
+            // Jika belum login, redirect ke halaman login
+            $this->session->set_flashdata('error', 'Anda harus login untuk mengakses halaman ini.');
+            redirect('auth/login'); // Atau 'login' jika Anda sudah meroutingnya ke root
+        }
     }
 
+    // Mengambil semua kategori (untuk dropdown atau daftar lengkap)
     public function get_all_kategori()
     {
         $this->db->order_by('nama_kategori', 'ASC');
         $query = $this->db->get('kategori');
+
+        return $query->result_array(); // Mengembalikan array asosiatif dari semua baris
+    }
+
+    // Mengambil kategori berdasarkan ID
+   public function get_kategori_by_id($id)
+{
+    $query = $this->db->get_where('kategori', array('id' => $id));
+    return $query->row_array(); // Pastikan mengembalikan 1 baris
+}
+
+    // Mengambil kategori berdasarkan nama (untuk validasi unik)
+    public function get_kategori_by_name($nama_kategori)
+    {
+        $query = $this->db->get_where('kategori', ['nama_kategori' => $nama_kategori]);
+
+        return $query->row_array();
+    }
+
+    // Menambah kategori baru
+    public function add_kategori($data)
+    {
+        return $this->db->insert('kategori', $data); // Mengembalikan TRUE/FALSE
+    }
+
+    // Memperbarui kategori
+   public function update_kategori($id, $data)
+{
+    $this->db->where('id', $id);
+    return $this->db->update('kategori', $data); // Pastikan ada klausa WHERE
+}
+
+    // Menghapus kategori
+   public function delete_kategori($id)
+{
+    return $this->db->delete('kategori', array('id' => $id)); // Pastikan ada klausa WHERE
+}
+
+    // Fungsi untuk Paginasi: Menghitung total kategori
+    public function count_all_kategori()
+    {
+        return $this->db->count_all('kategori');
+    }
+
+    // Fungsi untuk Paginasi: Mengambil kategori dengan limit dan offset
+    public function get_kategori_pagination($limit, $start)
+    {
+        $this->db->order_by('nama_kategori', 'ASC');
+        $this->db->limit($limit, $start);
+        $query = $this->db->get('kategori');
+
         return $query->result_array();
-    }
-
-    public function get_kategori_by_id($id)
-    {
-        $query = $this->db->get_where('kategori', array('id' => $id));
-        return $query->row_array();
-    }
-
-    public function get_kategori_by_slug($slug)
-    {
-        $query = $this->db->get_where('kategori', array('slug_kategori' => $slug));
-        return $query->row_array();
-    }
-
-    public function tambah_kategori($data)
-    {
-        return $this->db->insert('kategori', $data);
-    }
-
-    public function update_kategori($id, $data)
-    {
-        $this->db->where('id', $id);
-        return $this->db->update('kategori', $data);
-    }
-
-    public function delete_kategori($id)
-    {
-        $this->db->where('id', $id);
-        return $this->db->delete('kategori');
     }
 }

@@ -23,7 +23,7 @@
         <label for="gambar">Gambar (Kosongkan jika tidak ingin mengubah)</label>
         <input type="file" class="form-control-file" id="gambar" name="gambar">
         <small class="form-text text-muted">Max 2MB, format: jpg, jpeg, png, gif</small>
-        <?php if (!empty($artikel['gambar'])): ?>
+        <?php if (! empty($artikel['gambar'])): ?>
             <p class="mt-2">Gambar saat ini: <img src="<?php echo base_url('uploads/' . $artikel['gambar']); ?>" alt="Gambar Artikel" width="150"></p>
         <?php endif; ?>
     </div>
