@@ -91,7 +91,8 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto"> <li class="nav-item">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
                     <a class="nav-link" href="<?php echo base_url(); ?>" target="_blank">
                         <i class="fas fa-fw fa-globe"></i> Lihat Situs
                     </a>
@@ -111,24 +112,79 @@
         <nav class="col-md-3 col-lg-2 d-none d-md-block sidebar">
             <div class="sidebar-sticky pt-3">
                <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link <?php echo ($this->router->fetch_class() == 'Admin') ? 'active' : ''; ?>" href="<?php echo site_url('admin'); ?>">
-                        <i class="fas fa-fw fa-newspaper"></i> Artikel
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link <?php echo ($this->router->fetch_class() == 'Kategori_admin') ? 'active' : ''; ?>" href="<?php echo site_url('kategori_admin'); ?>">
-                        <i class="fas fa-fw fa-list"></i> Kategori
-                    </a>
-                </li>
-              <li class="nav-item">
-                <a class="nav-link <?php echo ($this->router->fetch_class() == 'Auth' && $this->router->fetch_method() == 'ubah_password') ? 'active' : ''; ?>" href="<?php echo site_url('ubah_password'); ?>">
-                    <i class="fas fa-fw fa-key"></i> Ubah Password
-                </a>
-            </li>
+                    <li class="nav-item">
+                        <?php
+                            // Logic untuk Dashboard
+                            $dashboard_active = '';
+                            if ($this->router->fetch_class() == 'Admin' && $this->router->fetch_method() == 'index') {
+                                $dashboard_active = 'active';
+                            }
+                            // Jika ada rute default controller untuk admin, bisa juga dicek di sini
+                            // if ($this->router->fetch_class() == 'Admin' && $this->router->fetch_method() == 'index' && $this->uri->segment(2) == '') {
+                            //    $dashboard_active = 'active';
+                            // }
+                        ?>
+                        <a class="nav-link <?php echo $dashboard_active; ?>" href="<?php echo site_url('admin'); ?>">
+                            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <?php
+                            // Logic untuk Artikel (daftar, tambah, edit)
+                            $artikel_active = '';
+                            if ($this->router->fetch_class() == 'Admin' && ($this->router->fetch_method() == 'artikel_list' || $this->router->fetch_method() == 'tambah' || $this->router->fetch_method() == 'edit')) {
+                                $artikel_active = 'active';
+                            }
+                        ?>
+                        <a class="nav-link <?php echo $artikel_active; ?>" href="<?php echo site_url('admin/artikel_list'); ?>">
+                            <i class="fas fa-newspaper me-2"></i> Artikel
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <?php
+                            // Logic untuk Kategori
+                            $kategori_active = '';
+                            if ($this->router->fetch_class() == 'Kategori_admin') {
+                                $kategori_active = 'active';
+                            }
+                        ?>
+                        <a class="nav-link <?php echo $kategori_active; ?>" href="<?php echo site_url('kategori_admin'); ?>">
+                            <i class="fas fa-tags me-2"></i> Kategori
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <?php
+                            // Logic untuk Ubah Password
+                            $ubah_password_active = '';
+                            if ($this->router->fetch_class() == 'Auth' && $this->router->fetch_method() == 'ubah_password') {
+                                $ubah_password_active = 'active';
+                            }
+                        ?>
+                        <a class="nav-link <?php echo $ubah_password_active; ?>" href="<?php echo site_url('ubah_password'); ?>">
+                            <i class="fas fa-key me-2"></i> Ubah Password
+                        </a>
+                    </li>
             </ul>
             </div>
         </nav>
 
-        <main role="main" class="col-md-9 ms-sm-auto col-lg-10 px-md-4"> <div class="main-content">
-                
+        <main role="main" class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="main-content">
+                <?php if ($this->session->flashdata('success')): ?>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <?php echo $this->session->flashdata('success'); ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <?php endif; ?>
+                <?php if ($this->session->flashdata('error')): ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <?php echo $this->session->flashdata('error'); ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <?php endif; ?>
+                <?php if ($this->session->flashdata('error_upload')): ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <?php echo $this->session->flashdata('error_upload'); ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <?php endif; ?>

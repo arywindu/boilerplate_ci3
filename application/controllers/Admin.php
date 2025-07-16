@@ -7,6 +7,7 @@ class Admin extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        // Cek apakah user sudah login
         if (! $this->session->userdata('logged_in')) {
             $this->session->set_flashdata('error', 'Anda harus login untuk mengakses halaman ini.');
             redirect('auth/login');
@@ -17,36 +18,56 @@ class Admin extends CI_Controller
         $this->load->library('form_validation');
         $this->load->library('session');
         $this->load->library('pagination');
-        // Pastikan library 'upload' juga dimuat jika belum di autoload
-        $this->load->library('upload');
+        $this->load->library('upload'); // Pastikan library 'upload' juga dimuat
     }
 
-    public function index()
+    public function index() // Ini akan jadi dashboard
+{
+    $data['title'] = 'Dashboard Admin';
+
+    // Ambil statistik dasar
+    $data['total_artikel'] = $this->Artikel_model->count_all_artikel(); // Tanpa keyword
+    $data['total_kategori'] = $this->Kategori_model->count_all_kategori();
+
+    // Anda perlu model untuk user dan komentar untuk mendapatkan totalnya
+    // Contoh (jika Anda memiliki model User_model dan Komentar_model):
+    // $this->load->model('User_model');
+    // $this->load->model('Komentar_model');
+    // $data['total_users'] = $this->User_model->count_all_users();
+    // $data['total_komentar'] = $this->Komentar_model->count_all_komentar();
+
+    // Ambil artikel terbaru (misal 5 artikel terakhir)
+    $data['latest_articles'] = $this->Artikel_model->get_latest_articles(5);
+
+    // Ambil komentar terbaru (misal 5 komentar terakhir, jika ada model Komentar_model)
+    // $data['latest_comments'] = $this->Komentar_model->get_latest_comments(5);
+
+    $this->load->view('admin/templates/header', $data);
+    $this->load->view('admin/dashboard/index', $data); // View dashboard/index
+    $this->load->view('admin/templates/footer');
+}
+
+    public function artikel_list()
     {
         $data['title'] = 'Daftar Artikel';
         $data['kategori_list'] = $this->Kategori_model->get_all_kategori();
 
-        // --- Bagian Perbaikan Pencarian ---
         // Ambil keyword pencarian dari URL parameter (GET)
-        $keyword = $this->input->get('keyword', true); // TRUE untuk XSS filtering
-        $data['keyword'] = $keyword; // Teruskan keyword ini ke view agar form pencarian bisa mengisi kembali nilai inputnya
-        // --- Akhir Bagian Perbaikan Pencarian ---
+        $keyword = $this->input->get('keyword', true);
+        $data['keyword'] = $keyword;
 
         // Konfigurasi Paginasi
         $config['base_url'] = site_url('admin/index');
         $config['per_page'] = 5; // Jumlah artikel per halaman
         $config['uri_segment'] = 3; // Segment URL yang berisi nomor halaman (misal: admin/index/5)
 
-        // --- Penyesuaian Paginasi untuk Pencarian ---
-        // Jika ada keyword, tambahkan ke base_url paginasi sebagai suffix
+        // Penyesuaian Paginasi untuk Pencarian
         if ($keyword) {
             $config['suffix'] = '?keyword=' . urlencode($keyword);
-            $config['first_url'] = $config['base_url'] . $config['suffix']; // Atur link halaman pertama dengan suffix
+            $config['first_url'] = $config['base_url'] . $config['suffix'];
         }
-        // --- Akhir Penyesuaian Paginasi ---
 
         // Hitung total baris berdasarkan keyword (jika ada)
-        // Fungsi count_all_artikel di model harus menerima parameter keyword
         $config['total_rows'] = $this->Artikel_model->count_all_artikel($keyword);
 
         // Gaya Bootstrap untuk Paginasi
@@ -55,7 +76,7 @@ class Admin extends CI_Controller
         $config['num_tag_open'] = '<li class="page-item"><span class="page-link">';
         $config['num_tag_close'] = '</span></li>';
         $config['cur_tag_open'] = '<li class="page-item active"><span class="page-link">';
-        $config['cur_tag_close'] = '<span class="sr-only">(current)</span></span></li>';
+        $config['cur_tag_close'] = '<span class="sr-only">(current)</span></span></li>'; // sr-only untuk screen reader
         $config['next_tag_open'] = '<li class="page-item"><span class="page-link">';
         $config['next_tagl_close'] = '</span></li>';
         $config['prev_tag_open'] = '<li class="page-item"><span class="page-link">';
@@ -64,14 +85,14 @@ class Admin extends CI_Controller
         $config['first_tagl_close'] = '</span></li>';
         $config['last_tag_open'] = '<li class="page-item"><span class="page-link">';
         $config['last_tagl_close'] = '</span></li>';
-        $config['attributes'] = ['class' => 'page-link']; // Tambahkan class ke link
+        $config['attributes'] = ['class' => 'page-link'];
 
         $this->pagination->initialize($config);
 
-        $data['start'] = $this->uri->segment($config['uri_segment']); // Ambil offset
+        $data['start'] = $this->uri->segment($config['uri_segment']);
         // Ambil artikel sesuai paginasi DAN keyword
         $data['artikel'] = $this->Artikel_model->get_artikel_pagination($config['per_page'], $data['start'], $keyword);
-        $data['pagination_links'] = $this->pagination->create_links(); // Buat link paginasi
+        $data['pagination_links'] = $this->pagination->create_links();
 
         $this->load->view('admin/templates/header', $data);
         $this->load->view('admin/artikel/index', $data);
@@ -83,44 +104,59 @@ class Admin extends CI_Controller
         $data['title'] = 'Tambah Artikel';
         $data['kategori_list'] = $this->Kategori_model->get_all_kategori();
 
+        // Validasi utama untuk Judul, Isi, dan Kategori
         $this->form_validation->set_rules('judul', 'Judul', 'required|min_length[5]|max_length[255]');
         $this->form_validation->set_rules('isi', 'Isi Artikel', 'required');
-        $this->form_validation->set_rules('id_kategori', 'Kategori', 'required|numeric');
+        $this->form_validation->set_rules('id_kategori', 'Kategori', 'required|numeric'); // Pastikan kategori dipilih
+
+        // Validasi untuk field SEO (opsional)
+        $this->form_validation->set_rules('meta_title', 'Meta Title', 'max_length[255]');
+        $this->form_validation->set_rules('meta_description', 'Meta Description', 'max_length[500]');
+        $this->form_validation->set_rules('meta_keywords', 'Meta Keywords', 'max_length[255]');
+
 
         if ($this->form_validation->run() === false) {
             $this->load->view('admin/templates/header', $data);
             $this->load->view('admin/artikel/form_tambah', $data);
             $this->load->view('admin/templates/footer');
         } else {
-            $judul = $this->input->post('judul');
+            $judul = $this->input->post('judul', TRUE); // TRUE untuk XSS filtering
             $slug = url_title($judul, 'dash', true);
-            $isi = $this->input->post('isi');
-            $id_kategori = $this->input->post('id_kategori');
+            $isi = $this->input->post('isi', TRUE);
+            $id_kategori = $this->input->post('id_kategori', TRUE);
+
+            // Ambil data SEO dari form
+            $meta_title = $this->input->post('meta_title', TRUE);
+            $meta_description = $this->input->post('meta_description', TRUE);
+            $meta_keywords = $this->input->post('meta_keywords', TRUE);
 
             $config['upload_path'] = './uploads/';
             $config['allowed_types'] = 'gif|jpg|png|jpeg';
             $config['max_size'] = 2048; // 2MB
             $config['file_name'] = $slug . '_' . time();
 
-            $this->upload->initialize($config); // Inisialisasi upload dengan config
+            $this->upload->initialize($config);
 
             $gambar = null;
             if ($this->upload->do_upload('gambar')) {
                 $upload_data = $this->upload->data();
                 $gambar = $upload_data['file_name'];
             } else {
-                // Jangan tampilkan error "You did not select a file to upload."
+                // Hanya set flashdata error jika ada error upload selain 'tidak ada file dipilih'
                 if ($this->upload->display_errors('', '') != 'You did not select a file to upload.') {
                     $this->session->set_flashdata('error_upload', $this->upload->display_errors());
                 }
             }
 
             $data_insert = [
-                'judul' => $judul,
-                'slug' => $slug,
-                'isi' => $isi,
-                'gambar' => $gambar,
-                'id_kategori' => $id_kategori,
+                'judul'             => $judul,
+                'slug'              => $slug,
+                'isi'               => $isi,
+                'gambar'            => $gambar,
+                'id_kategori'       => $id_kategori,
+                'meta_title'        => $meta_title,        // DATA SEO DITAMBAHKAN
+                'meta_description'  => $meta_description,  // DATA SEO DITAMBAHKAN
+                'meta_keywords'     => $meta_keywords      // DATA SEO DITAMBAHKAN
             ];
 
             $this->Artikel_model->tambah_artikel($data_insert);
@@ -147,21 +183,36 @@ class Admin extends CI_Controller
         $this->form_validation->set_rules('isi', 'Isi Artikel', 'required');
         $this->form_validation->set_rules('id_kategori', 'Kategori', 'required|numeric');
 
+        // Validasi untuk field SEO (opsional)
+        $this->form_validation->set_rules('meta_title', 'Meta Title', 'max_length[255]');
+        $this->form_validation->set_rules('meta_description', 'Meta Description', 'max_length[500]');
+        $this->form_validation->set_rules('meta_keywords', 'Meta Keywords', 'max_length[255]');
+
+
         if ($this->form_validation->run() === false) {
             $this->load->view('admin/templates/header', $data);
             $this->load->view('admin/artikel/form_edit', $data);
             $this->load->view('admin/templates/footer');
         } else {
-            $judul = $this->input->post('judul');
+            $judul = $this->input->post('judul', TRUE);
             $slug = url_title($judul, 'dash', true);
-            $isi = $this->input->post('isi');
-            $id_kategori = $this->input->post('id_kategori');
+            $isi = $this->input->post('isi', TRUE);
+            $id_kategori = $this->input->post('id_kategori', TRUE);
+
+            // Ambil data SEO dari form
+            $meta_title = $this->input->post('meta_title', TRUE);
+            $meta_description = $this->input->post('meta_description', TRUE);
+            $meta_keywords = $this->input->post('meta_keywords', TRUE);
+
 
             $data_update = [
-                'judul' => $judul,
-                'slug' => $slug,
-                'isi' => $isi,
-                'id_kategori' => $id_kategori,
+                'judul'             => $judul,
+                'slug'              => $slug,
+                'isi'               => $isi,
+                'id_kategori'       => $id_kategori,
+                'meta_title'        => $meta_title,        // DATA SEO DITAMBAHKAN
+                'meta_description'  => $meta_description,  // DATA SEO DITAMBAHKAN
+                'meta_keywords'     => $meta_keywords      // DATA SEO DITAMBAHKAN
             ];
 
             // Handle upload gambar jika ada perubahan
@@ -170,7 +221,7 @@ class Admin extends CI_Controller
             $config['max_size'] = 2048;
             $config['file_name'] = $slug . '_' . time();
 
-            $this->upload->initialize($config); // Inisialisasi upload dengan config
+            $this->upload->initialize($config);
 
             if ($this->upload->do_upload('gambar')) {
                 // Hapus gambar lama jika ada
@@ -180,7 +231,7 @@ class Admin extends CI_Controller
                 $upload_data = $this->upload->data();
                 $data_update['gambar'] = $upload_data['file_name'];
             } else {
-                // Jangan tampilkan error "You did not select a file to upload."
+                // Hanya set flashdata error jika ada error upload selain 'tidak ada file dipilih'
                 if ($this->upload->display_errors('', '') != 'You did not select a file to upload.') {
                     $this->session->set_flashdata('error_upload', $this->upload->display_errors());
                 }

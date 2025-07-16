@@ -53,6 +53,14 @@ class Artikel_model extends CI_Model
         return $this->db->count_all_results('artikel'); // Gunakan count_all_results
     }
 
+    public function get_latest_articles($limit = 5)
+{
+    $this->db->order_by('tanggal_publikasi', 'DESC');
+    $this->db->limit($limit);
+    $query = $this->db->get('artikel');
+    return $query->result_array();
+}
+
     public function get_artikel_pagination($limit, $start, $keyword = null) // Tambahkan parameter keyword
     {
         $this->db->select('artikel.*, kategori.nama_kategori');
@@ -73,13 +81,14 @@ class Artikel_model extends CI_Model
 
     public function tambah_artikel($data)
     {
+        // $data seharusnya sudah termasuk meta_title, meta_description, meta_keywords
         return $this->db->insert('artikel', $data);
     }
 
     public function update_artikel($id, $data)
     {
+        // $data seharusnya sudah termasuk meta_title, meta_description, meta_keywords
         $this->db->where('id', $id);
-
         return $this->db->update('artikel', $data);
     }
 
