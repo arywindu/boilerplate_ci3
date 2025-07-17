@@ -241,7 +241,7 @@
                 <a class="nav-link <?php echo $artikel_main_active; ?>" data-bs-toggle="collapse" href="#artikelSubmenu" role="button" aria-expanded="<?php echo ($artikel_collapse_show == 'show') ? 'true' : 'false'; ?>" aria-controls="artikelSubmenu">
                     <i class="fas fa-newspaper"></i> Artikel <i class="fas fa-chevron-down ms-auto"></i>
                 </a>
-                <div class="collapse <?php echo $artikel_collapse_show; ?>" id="artikelSubmenu">
+                <div class="collapse <?php echo $artikel_collapse_show; ?> pt-1" id="artikelSubmenu">
                     <ul class="nav flex-column ps-3">
                         <li class="nav-item">
                             <a class="nav-link <?php echo ($current_class == 'Admin' && $current_method == 'artikel_list') ? 'active' : ''; ?>" href="<?php echo site_url('admin/artikel_list'); ?>">

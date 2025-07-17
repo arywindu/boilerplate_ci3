@@ -190,6 +190,60 @@ class Admin extends CI_Controller
     }
 }
 
+public function upload_gambar_editor()
+{
+    // Pastikan ini hanya bisa diakses oleh user yang login
+    if (! $this->session->userdata('logged_in')) {
+        $this->output->set_status_header(401)->set_output(json_encode(['status' => 'error', 'message' => 'Unauthorized access.']));
+        return;
+    }
+
+    $config['upload_path']   = './uploads/editor_images/'; // Buat subfolder ini di dalam uploads/
+    $config['allowed_types'] = 'gif|jpg|png|jpeg';
+    $config['max_size']      = 5000; // 5MB (Sesuaikan batas ukuran)
+    $config['file_name']     = uniqid('img_editor_'); // Nama file unik
+
+    // Pastikan folder uploads/editor_images ada
+    if (!is_dir($config['upload_path'])) {
+        mkdir($config['upload_path'], 0777, TRUE); // Buat folder jika belum ada
+    }
+
+    $this->upload->initialize($config);
+
+    if ($this->upload->do_upload('file')) { // Nama input file harus 'file' sesuai FormData
+        $upload_data = $this->upload->data();
+        $file_url = base_url('uploads/editor_images/' . $upload_data['file_name']);
+        
+        $this->output->set_content_type('application/json')->set_output(json_encode(['status' => 'success', 'url' => $file_url]));
+    } else {
+        $this->output->set_status_header(500)->set_output(json_encode(['status' => 'error', 'message' => $this->upload->display_errors('', '')]));
+    }
+}
+
+public function delete_gambar_editor()
+{
+    // Pastikan ini hanya bisa diakses oleh user yang login
+    if (! $this->session->userdata('logged_in')) {
+        $this->output->set_status_header(401)->set_output(json_encode(['status' => 'error', 'message' => 'Unauthorized access.']));
+        return;
+    }
+
+    $file_url = $this->input->post('file_url');
+    $file_name = basename($file_url); // Ambil nama file dari URL
+    $file_path = './uploads/editor_images/' . $file_name;
+
+    // Pastikan file_path tidak keluar dari folder uploads/editor_images/
+    if (strpos(realpath($file_path), realpath('./uploads/editor_images/')) === 0 && file_exists($file_path)) {
+        if (unlink($file_path)) {
+            $this->output->set_content_type('application/json')->set_output(json_encode(['status' => 'success', 'message' => 'File deleted.']));
+        } else {
+            $this->output->set_content_type('application/json')->set_output(json_encode(['status' => 'error', 'message' => 'Failed to delete file.']));
+        }
+    } else {
+        $this->output->set_content_type('application/json')->set_output(json_encode(['status' => 'error', 'message' => 'Invalid file path.']));
+    }
+}
+
     public function edit($id = null)
     {
         if ($id === null) {
