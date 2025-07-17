@@ -142,6 +142,76 @@
         .page-header .breadcrumb {
             margin-bottom: 0;
         }
+        
+        /* Pagination Styling (FINAL CLEAN LOOK - BOOTSTRAP 5 STANDARD) */
+    .pagination-wrapper {
+        display: flex;
+        justify-content: center;
+        margin-top: 2rem;
+        padding-bottom: 1rem;
+    }
+    .pagination {
+        /* Bootstrap 5 default margins are good, no need to reset unless specific conflict */
+        margin-bottom: 0;
+    }
+    .pagination .page-item {
+        /* No extra margins needed here, controlled by .page-link */
+    }
+    .pagination .page-item .page-link {
+        /* Remove Bootstrap's default inner borders to avoid double borders */
+        border: 1px solid var(--card-border-color); /* Single border */
+        border-radius: 0.25rem; /* Standard rounded corners */
+        margin: 0 4px; /* Jarak antar tombol */
+        
+        color: var(--font-color-dark);
+        background-color: var(--content-bg-color); /* White background */
+        transition: all 0.2s ease;
+        min-width: 40px; /* Seragamkan lebar */
+        height: 40px; /* Seragamkan tinggi */
+        display: flex; /* Untuk tengah konten */
+        align-items: center;
+        justify-content: center;
+        font-weight: 500;
+        text-decoration: none;
+        outline: none; /* Hapus outline saat focus */
+        box-shadow: none; /* Hapus bayangan default */
+    }
+    /* Pastikan border-radius pada item pertama dan terakhir benar */
+    .pagination .page-item:first-child .page-link {
+        border-top-left-radius: 0.25rem;
+        border-bottom-left-radius: 0.25rem;
+        border-top-right-radius: 0.25rem; /* Ensure individual radius */
+        border-bottom-right-radius: 0.25rem;
+    }
+    .pagination .page-item:last-child .page-link {
+        border-top-left-radius: 0.25rem;
+        border-bottom-left-radius: 0.25rem;
+        border-top-right-radius: 0.25rem;
+        border-bottom-right-radius: 0.25rem;
+    }
+
+    .pagination .page-item .page-link:hover:not(.active) {
+        background-color: var(--main-bg-color);
+        border-color: #0d6efd;
+        color: var(--font-color-dark);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: var(--sidebar-link-active-bg);
+        border-color: var(--sidebar-link-active-bg);
+        color: #fff;
+        box-shadow: 0 2px 5px rgba(13, 110, 253, 0.3);
+        font-weight: 600;
+        z-index: 2; /* Agar aktif di atas border item lain */
+    }
+    .pagination .page-item.disabled .page-link {
+        background-color: #f8f9fa;
+        border-color: var(--card-border-color);
+        color: #6c757d;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
 
         /* Flashdata Alerts */
         .alert-fixed {

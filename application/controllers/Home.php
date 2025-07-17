@@ -11,15 +11,28 @@ class Home extends CI_Controller
         $this->load->model('Kategori_model'); // MUAT KATEGORI_MODEL
         $this->load->helper('url'); // MUAT HELPER URL
         $this->load->helper('text'); // MUAT HELPER TEXT
+        // $this->load->library('pagination'); // HAPUS: Tidak perlu library pagination
     }
 
     public function index()
     {
-        $data['title'] = 'Berita Terbaru';
-        $data['artikel'] = $this->Artikel_model->get_all_artikel();
+         $data['title'] = 'Berita Terbaru';
+
+        // Langsung ambil 6 artikel terbaru (tanpa paginasi)
+        $data['artikel'] = $this->Artikel_model->get_latest_articles(9); // Ambil 6 artikel terbaru
+
+        // HAPUS: Semua konfigurasi dan inisialisasi pagination
+        // $config['base_url'] = site_url('home/index');
+        // $config['total_rows'] = $this->Artikel_model->count_all_artikel();
+        // $config['per_page'] = 9;
+        // $config['uri_segment'] = 3;
+        // ... (styling config) ...
+        // $this->pagination->initialize($config);
+        // $data['start'] = $this->uri->segment($config['uri_segment']);
+        // $data['pagination_links'] = $this->pagination->create_links(); // Tidak perlu lagi
 
         // Artikel Unggulan (untuk carousel di homepage)
-        $data['featured_articles'] = $this->Artikel_model->get_latest_articles(3); // Ambil 3 artikel terbaru
+        $data['featured_articles'] = $this->Artikel_model->get_latest_articles(3); // Ambil 3 artikel terbaru untuk featured
 
         // Rekomendasi Produk (dari pembahasan sebelumnya, jika masih ada)
         // Ini contoh dummy, ganti dengan data real jika ada tabel produk
@@ -36,7 +49,7 @@ class Home extends CI_Controller
                 'gambar_produk' => 'https://via.placeholder.com/400x300/28a745/FFFFFF?text=Smartwatch',
                 'harga_produk' => 'Rp850.000',
                 'deskripsi_produk' => 'Pantau kesehatan dan notifikasi Anda. Tahan air hingga 50m.',
-                'link_affiliate' => 'https://link-affiliate-smartwatch.com/produk456'
+                'link_affiliate' => 'https://www.shopee.co.id/samsung-galaxy-watch-6-affiliate-link'
             ],
             // Tambahkan produk lain
         ];
@@ -69,7 +82,7 @@ class Home extends CI_Controller
         $data['popular_categories'] = $this->Kategori_model->get_popular_categories(4);
 
         // 3. Artikel Pilihan Lainnya (Menggantikan Produk Rekomendasi)
-        $data['other_articles_choice'] = $this->Artikel_model->get_random_articles_not_in_list([$data['artikel']['id']], [], 3); // Ambil 3 artikel acak, tidak termasuk artikel saat ini, dan dari semua kategori
+        $data['other_articles_choice'] = $this->Artikel_model->get_random_articles_not_in_list([$data['artikel']['id']], [], 3);
 
         $this->load->view('public/templates/header', $data);
         $this->load->view('public/detail', $data);

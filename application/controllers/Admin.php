@@ -57,7 +57,7 @@ class Admin extends CI_Controller
         $data['keyword'] = $keyword;
 
         // Konfigurasi Paginasi
-        $config['base_url'] = site_url('admin/index');
+        $config['base_url'] = site_url('admin/artikel_list');
         $config['per_page'] = 5; // Jumlah artikel per halaman
         $config['uri_segment'] = 3; // Segment URL yang berisi nomor halaman (misal: admin/index/5)
 
@@ -70,22 +70,26 @@ class Admin extends CI_Controller
         // Hitung total baris berdasarkan keyword (jika ada)
         $config['total_rows'] = $this->Artikel_model->count_all_artikel($keyword);
 
-        // Gaya Bootstrap untuk Paginasi
+// Gaya Bootstrap untuk Paginasi (KOREKSI FINAL UNTUK STRUKTUR HTML)
         $config['full_tag_open'] = '<ul class="pagination justify-content-center">';
         $config['full_tag_close'] = '</ul>';
-        $config['num_tag_open'] = '<li class="page-item"><span class="page-link">';
-        $config['num_tag_close'] = '</span></li>';
-        $config['cur_tag_open'] = '<li class="page-item active"><span class="page-link">';
-        $config['cur_tag_close'] = '<span class="sr-only">(current)</span></span></li>'; // sr-only untuk screen reader
-        $config['next_tag_open'] = '<li class="page-item"><span class="page-link">';
-        $config['next_tagl_close'] = '</span></li>';
-        $config['prev_tag_open'] = '<li class="page-item"><span class="page-link">';
-        $config['prev_tagl_close'] = '</span></li>';
-        $config['first_tag_open'] = '<li class="page-item"><span class="page-link">';
-        $config['first_tagl_close'] = '</span></li>';
-        $config['last_tag_open'] = '<li class="page-item"><span class="page-link">';
-        $config['last_tagl_close'] = '</span></li>';
-        $config['attributes'] = ['class' => 'page-link'];
+        // Pastikan link nomor halaman dan prev/next/first/last juga memiliki class 'page-link'
+        $config['num_tag_open'] = '<li class="page-item">'; // Membuka li
+        $config['num_tag_close'] = '</li>'; // Menutup li
+
+        $config['cur_tag_open'] = '<li class="page-item active" aria-current="page"><a class="page-link">'; // Untuk halaman aktif, tambahkan a.page-link di dalamnya
+        $config['cur_tag_close'] = '</a></li>'; // Tutup a dan li
+
+        $config['next_tag_open'] = '<li class="page-item">';
+        $config['next_tagl_close'] = '</li>';
+        $config['prev_tag_open'] = '<li class="page-item">';
+        $config['prev_tagl_close'] = '</li>';
+        $config['first_tag_open'] = '<li class="page-item">';
+        $config['first_tagl_close'] = '</li>';
+        $config['last_tag_open'] = '<li class="page-item">';
+        $config['last_tagl_close'] = '</li>';
+
+        $config['attributes'] = array('class' => 'page-link'); // Ini akan diterapkan ke semua tag <a>
 
         $this->pagination->initialize($config);
 

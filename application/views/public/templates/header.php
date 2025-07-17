@@ -238,16 +238,18 @@
             display: block; /* Agar margin auto bekerja */
         }
         /* Responsive Video Embeds (must be in public/templates/header.php) */
-        .responsive-video-container {
+      .responsive-video-container {
             position: relative;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
-            height: 0;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio (height = 56.25% of width) */
+            height: 0; /* Penting: Tinggi asli kontainer 0, tinggi diberikan oleh padding-bottom */
             overflow: hidden;
             max-width: 100%;
             background: #000;
             margin: 1.5rem 0;
             border-radius: 0.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
+        /* Style untuk iframe, object, embed di dalam kontainer responsif */
         .responsive-video-container iframe,
         .responsive-video-container object,
         .responsive-video-container embed {
@@ -255,13 +257,16 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
+            height: 100%; /* Ini penting: mengisi tinggi kontainer yang sudah diatur rasio aspeknya */
             border: 0;
         }
-        .note-video-clip { /* Style from Summernote */
-            max-width: 100%;
-            height: auto;
-            display: block;
+
+        /* Summernote Video Clip - Memastikan dia bekerja dengan container responsif */
+        /* Kita tidak akan lagi mengatur width/height di sini, tapi memastikan ia fit */
+        .note-video-clip {
+            max-width: 100% !important; /* Pastikan tidak melebihi lebar kontainer */
+            display: block !important; /* Hilangkan spasi ekstra di bawah iframe */
+            width: 100% !important; 
         }
 
         /* Post Sidebar */

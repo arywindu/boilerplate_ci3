@@ -78,11 +78,11 @@
         <?php endif; ?>
     </div>
 
-    <?php
-    // if (isset($pagination_links) && !empty($pagination_links)) {
-    //     echo '<div class="d-flex justify-content-center mt-5">' . $pagination_links . '</div>';
-    // }
-    ?>
+    <!-- <?php
+    if (isset($pagination_links) && !empty($pagination_links)) {
+        echo '<div class="d-flex justify-content-center mt-5">' . $pagination_links . '</div>';
+    }
+    ?> -->
 </section>
 
 <!-- <?php if (!empty($recommended_products)): ?>
