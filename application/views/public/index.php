@@ -1,6 +1,6 @@
 <section id="home" class="hero-section">
     <div class="container">
-        <h1 class="display-4 wow animate__animated animate__fadeInDown">Selamat Datang di <span class="fw-bold text-warning">Berita Kita</span>!</h1>
+        <h1 class="display-4 wow animate__animated animate__fadeInDown">Selamat Datang di <span class="fw-bold text-warning">Boilerplate CI 3</span>!</h1>
         <p class="lead wow animate__animated animate__fadeInUp">Temukan berbagai berita dan artikel terbaru dari berbagai topik menarik setiap hari, serta rekomendasi produk terbaik dari kami.</p>
         <a href="#articles" class="btn btn-light btn-lg rounded-pill px-4 wow animate__animated animate__zoomIn">Baca Artikel Terbaru <i class="fas fa-arrow-down ms-2"></i></a>
     </div>
@@ -117,19 +117,10 @@
 
 <section id="newsletter" class="bg-dark text-white section-padding text-center">
     <div class="container wow animate__animated animate__fadeIn">
-        <h2 class="mb-4 display-5 fw-bold">Dapatkan Berita Terbaru Langsung ke Email Anda!</h2>
+        <h2 class="mb-4 display-5 fw-bold">Free Section!</h2>
         <p class="lead mb-4">
-            Jangan lewatkan artikel dan rekomendasi produk terkini. Bergabunglah dengan buletin kami.
+            Bebas mau isi apa saja di sini, bisa newsletter, promo, atau lainnya.
         </p>
-        <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-6">
-                <form action="#" method="POST" class="d-flex flex-column flex-sm-row">
-                    <input type="email" class="form-control form-control-lg me-sm-2 mb-2 mb-sm-0 rounded-pill" placeholder="Masukkan alamat email Anda" required>
-                    <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4">Berlangganan <i class="fas fa-paper-plane ms-2"></i></button>
-                </form>
-                <small class="mt-2 d-block text-muted">Kami tidak akan pernah membagikan email Anda kepada pihak ketiga.</small>
-            </div>
-        </div>
     </div>
 </section>
 
@@ -142,7 +133,7 @@
         </div>
         <div class="col-md-6 text-center text-md-start">
             <p class="lead">
-                Berita Kita adalah platform berita dan rekomendasi produk terkemuka yang menyajikan informasi terkini dan analisis mendalam dari berbagai penjuru dunia. Kami juga membantu Anda menemukan produk terbaik melalui link afiliasi terpercaya.
+                Boilerplate CI 3 adalah platform berita dan rekomendasi produk terkemuka yang menyajikan informasi terkini dan analisis mendalam dari berbagai penjuru dunia. Kami juga membantu Anda menemukan produk terbaik melalui link afiliasi terpercaya.
             </p>
             <p class="text-secondary">
                 Didirikan pada tahun 2023, kami berkomitmen untuk menjadi sumber informasi terpercaya Anda. Tim jurnalis profesional kami bekerja keras untuk menghadirkan liputan terbaik dan menjaga integritas jurnalistik, sekaligus menyajikan rekomendasi produk yang relevan dan bermanfaat.

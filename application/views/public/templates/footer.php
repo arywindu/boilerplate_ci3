@@ -2,7 +2,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6 text-md-start mb-2 mb-md-0">
-                    <p class="mb-0">&copy; <?php echo date('Y'); ?> Nama Situs Berita Anda. Semua Hak Cipta Dilindungi.</p>
+                    <p class="mb-0">&copy; <?php echo date('Y'); ?> Boilerplate CI 3.</p>
                 </div>
                 <div class="col-md-6 text-md-end">
                     <ul class="list-inline mb-0">
