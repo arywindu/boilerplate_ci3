@@ -87,10 +87,25 @@
     document.addEventListener('DOMContentLoaded', function() {
         tinymce.init({
             selector: '#isi', // ID dari textarea yang ingin dijadikan editor
-            plugins: 'advlist autolink lists link image charmap print preview anchor code visualblocks', // Tambah 'code', 'visualblocks' untuk lebih fleksibel
-            toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | image | code | help',
+            plugins: 'advlist autolink lists link image charmap print preview anchor code visualblocks fullscreen paste', // Tambah 'fullscreen' dan 'paste'
+            toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | image | code | fullscreen | help',
             height: 400, // Tinggi editor
-            menubar: 'file edit view insert format tools table help' // Tampilkan menubar
+            menubar: 'file edit view insert format tools table help', // Tampilkan menubar
+            // Opsional: Pastikan konten disinkronkan saat form disubmit
+            setup: function(editor) {
+                editor.on('change', function() {
+                    editor.save(); // Ini memastikan konten TinyMCE disimpan ke textarea asli
+                });
+            }
         });
+
+        // Tambahan: Pastikan konten TinyMCE disinkronkan saat form disubmit secara langsung
+        // Ini adalah fallback penting jika setup editor.on('change') tidak cukup
+        const form = document.querySelector('form'); // Ambil form pertama di halaman
+        if (form) {
+            form.addEventListener('submit', function() {
+                tinymce.triggerSave(); // Memaksa TinyMCE untuk menyimpan konten ke textarea
+            });
+        }
     });
 </script>

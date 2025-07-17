@@ -100,70 +100,95 @@ class Admin extends CI_Controller
     }
 
     public function tambah()
-    {
-        $data['title'] = 'Tambah Artikel';
-        $data['kategori_list'] = $this->Kategori_model->get_all_kategori();
+{
+    $data['title'] = 'Tambah Artikel';
+    $data['kategori_list'] = $this->Kategori_model->get_all_kategori();
 
-        // Validasi utama untuk Judul, Isi, dan Kategori
-        $this->form_validation->set_rules('judul', 'Judul', 'required|min_length[5]|max_length[255]');
-        $this->form_validation->set_rules('isi', 'Isi Artikel', 'required');
-        $this->form_validation->set_rules('id_kategori', 'Kategori', 'required|numeric'); // Pastikan kategori dipilih
+    // --- Aturan Validasi untuk Semua Field Mandatory ---
+    $this->form_validation->set_rules('judul', 'Judul Artikel', 'required|min_length[5]|max_length[255]',
+        array('required' => '%s harus diisi.') // Pesan error kustom
+    );
+    $this->form_validation->set_rules('id_kategori', 'Kategori', 'required|numeric',
+        array('required' => '%s harus dipilih.')
+    );
+    $this->form_validation->set_rules('isi', 'Isi Artikel', 'required',
+        array('required' => '%s harus diisi.')
+    );
+    // Untuk gambar, kita tidak pakai 'required' karena itu adalah input 'file'
+    // CI Form Validation tidak punya aturan 'required' bawaan untuk file input.
+    // Penanganan gambar wajib biasanya dilakukan secara manual di logic controller
+    // setelah form_validation->run()
+    // Atau menggunakan library custom seperti 'form_validation_file_upload' jika diperlukan.
 
-        // Validasi untuk field SEO (opsional)
-        $this->form_validation->set_rules('meta_title', 'Meta Title', 'max_length[255]');
-        $this->form_validation->set_rules('meta_description', 'Meta Description', 'max_length[500]');
-        $this->form_validation->set_rules('meta_keywords', 'Meta Keywords', 'max_length[255]');
+    // Field SEO juga dibuat mandatory
+    $this->form_validation->set_rules('meta_title', 'Meta Title', 'required|max_length[255]',
+        array('required' => '%s harus diisi.')
+    );
+    $this->form_validation->set_rules('meta_description', 'Meta Description', 'required|max_length[500]',
+        array('required' => '%s harus diisi.')
+    );
+    $this->form_validation->set_rules('meta_keywords', 'Meta Keywords', 'required|max_length[255]',
+        array('required' => '%s harus diisi.')
+    );
+    // --- Akhir Aturan Validasi ---
 
 
-        if ($this->form_validation->run() === false) {
-            $this->load->view('admin/templates/header', $data);
-            $this->load->view('admin/artikel/form_tambah', $data);
-            $this->load->view('admin/templates/footer');
+    if ($this->form_validation->run() === false) {
+        // Jika validasi gagal atau pertama kali form dimuat
+        $this->load->view('admin/templates/header', $data);
+        $this->load->view('admin/artikel/form_tambah', $data);
+        $this->load->view('admin/templates/footer');
+    } else {
+        // ... (Kode Anda untuk memproses data input dan upload gambar) ...
+        // Tambahan: jika gambar wajib, cek di sini:
+        // if (empty($_FILES['gambar']['name'])) {
+        //     $this->session->set_flashdata('error_upload', 'Gambar artikel wajib diunggah.');
+        //     redirect('admin/tambah'); // Atau reload view dengan error
+        //     return;
+        // }
+
+        $judul = $this->input->post('judul', TRUE);
+        $slug = url_title($judul, 'dash', true);
+        $isi = $this->input->post('isi', TRUE);
+        $id_kategori = $this->input->post('id_kategori', TRUE);
+
+        $meta_title = $this->input->post('meta_title', TRUE);
+        $meta_description = $this->input->post('meta_description', TRUE);
+        $meta_keywords = $this->input->post('meta_keywords', TRUE);
+
+        $config['upload_path'] = './uploads/';
+        $config['allowed_types'] = 'gif|jpg|png|jpeg';
+        $config['max_size'] = 2048; // 2MB
+        $config['file_name'] = $slug . '_' . time();
+
+        $this->upload->initialize($config);
+
+        $gambar = null;
+        if ($this->upload->do_upload('gambar')) {
+            $upload_data = $this->upload->data();
+            $gambar = $upload_data['file_name'];
         } else {
-            $judul = $this->input->post('judul', TRUE); // TRUE untuk XSS filtering
-            $slug = url_title($judul, 'dash', true);
-            $isi = $this->input->post('isi', TRUE);
-            $id_kategori = $this->input->post('id_kategori', TRUE);
-
-            // Ambil data SEO dari form
-            $meta_title = $this->input->post('meta_title', TRUE);
-            $meta_description = $this->input->post('meta_description', TRUE);
-            $meta_keywords = $this->input->post('meta_keywords', TRUE);
-
-            $config['upload_path'] = './uploads/';
-            $config['allowed_types'] = 'gif|jpg|png|jpeg';
-            $config['max_size'] = 2048; // 2MB
-            $config['file_name'] = $slug . '_' . time();
-
-            $this->upload->initialize($config);
-
-            $gambar = null;
-            if ($this->upload->do_upload('gambar')) {
-                $upload_data = $this->upload->data();
-                $gambar = $upload_data['file_name'];
-            } else {
-                // Hanya set flashdata error jika ada error upload selain 'tidak ada file dipilih'
-                if ($this->upload->display_errors('', '') != 'You did not select a file to upload.') {
-                    $this->session->set_flashdata('error_upload', $this->upload->display_errors());
-                }
+            if ($this->upload->display_errors('', '') != 'You did not select a file to upload.') {
+                $this->session->set_flashdata('error_upload', $this->upload->display_errors());
             }
-
-            $data_insert = [
-                'judul'             => $judul,
-                'slug'              => $slug,
-                'isi'               => $isi,
-                'gambar'            => $gambar,
-                'id_kategori'       => $id_kategori,
-                'meta_title'        => $meta_title,        // DATA SEO DITAMBAHKAN
-                'meta_description'  => $meta_description,  // DATA SEO DITAMBAHKAN
-                'meta_keywords'     => $meta_keywords      // DATA SEO DITAMBAHKAN
-            ];
-
-            $this->Artikel_model->tambah_artikel($data_insert);
-            $this->session->set_flashdata('success', 'Artikel berhasil ditambahkan!');
-            redirect('admin');
         }
+
+        $data_insert = [
+            'judul'             => $judul,
+            'slug'              => $slug,
+            'isi'               => $isi,
+            'gambar'            => $gambar,
+            'id_kategori'       => $id_kategori,
+            'meta_title'        => $meta_title,
+            'meta_description'  => $meta_description,
+            'meta_keywords'     => $meta_keywords
+        ];
+
+        $this->Artikel_model->tambah_artikel($data_insert);
+        $this->session->set_flashdata('success', 'Artikel berhasil ditambahkan!');
+        redirect('admin');
     }
+}
 
     public function edit($id = null)
     {
