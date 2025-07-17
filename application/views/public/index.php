@@ -1,14 +1,14 @@
 <section id="home" class="hero-section">
     <div class="container">
-        <h1 class="display-4 wow animate__animated animate__fadeInDown" data-wow-delay="0.2s">Selamat Datang di <span class="fw-bold text-warning">Berita Kita</span>!</h1>
-        <p class="lead wow animate__animated animate__fadeInUp" data-wow-delay="0.5s">Temukan berbagai berita dan artikel terbaru dari berbagai topik menarik setiap hari, serta rekomendasi produk terbaik dari kami.</p>
-        <a href="#articles" class="btn btn-light btn-lg rounded-pill px-4 wow animate__animated animate__zoomIn" data-wow-delay="0.8s">Baca Artikel Terbaru <i class="fas fa-arrow-down ms-2"></i></a>
+        <h1 class="display-4 wow animate__animated animate__fadeInDown">Selamat Datang di <span class="fw-bold text-warning">Berita Kita</span>!</h1>
+        <p class="lead wow animate__animated animate__fadeInUp">Temukan berbagai berita dan artikel terbaru dari berbagai topik menarik setiap hari, serta rekomendasi produk terbaik dari kami.</p>
+        <a href="#articles" class="btn btn-light btn-lg rounded-pill px-4 wow animate__animated animate__zoomIn">Baca Artikel Terbaru <i class="fas fa-arrow-down ms-2"></i></a>
     </div>
 </section>
 
 <?php if (!empty($featured_articles)): ?>
 <section id="featured-articles" class="container section-padding">
-    <h2 class="text-center mb-5 display-5 fw-bold wow animate__animated animate__fadeIn" data-wow-delay="0.2s">Artikel Unggulan</h2>
+    <h2 class="text-center mb-5 display-5 fw-bold wow animate__animated animate__fadeIn">Artikel Unggulan</h2>
     <div id="carouselExampleIndicators" class="carousel slide wow animate__animated animate__fadeInUp" data-bs-ride="carousel" data-wow-delay="0.4s">
         <div class="carousel-indicators">
             <?php foreach ($featured_articles as $key => $item): ?>
@@ -43,7 +43,7 @@
 <?php endif; ?>
 
 <section id="articles" class="container section-padding bg-white rounded-3 shadow-sm">
-    <h2 class="text-center mb-5 display-5 fw-bold wow animate__animated animate__fadeIn" data-wow-delay="0.2s">Berita Terkini</h2>
+    <h2 class="text-center mb-5 display-5 fw-bold wow animate__animated animate__fadeIn">Berita Terkini</h2>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         <?php if (empty($artikel)): ?>
             <div class="col-12 text-center wow animate__animated animate__fadeInUp" data-wow-delay="0.4s">
@@ -85,10 +85,10 @@
     ?>
 </section>
 
-<?php if (!empty($recommended_products)): ?>
+<!-- <?php if (!empty($recommended_products)): ?>
 <section id="products" class="container section-padding bg-light-gray rounded-3 shadow-sm">
-    <h2 class="text-center mb-5 display-5 fw-bold wow animate__animated animate__fadeIn" data-wow-delay="0.2s">Produk Rekomendasi Kami</h2>
-    <p class="text-center mb-5 lead wow animate__animated animate__fadeIn" data-wow-delay="0.4s">Dapatkan penawaran terbaik dari produk-produk pilihan kami melalui link afiliasi terpercaya.</p>
+    <h2 class="text-center mb-5 display-5 fw-bold wow animate__animated animate__fadeIn">Produk Rekomendasi Kami</h2>
+    <p class="text-center mb-5 lead wow animate__animated animate__fadeIn">Dapatkan penawaran terbaik dari produk-produk pilihan kami melalui link afiliasi terpercaya.</p>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
         <?php foreach ($recommended_products as $key => $product): ?>
             <div class="col wow animate__animated animate__fadeInUp" data-wow-delay="<?php echo 0.1 * ($key + 1); ?>s">
@@ -108,26 +108,35 @@
             </div>
         <?php endforeach; ?>
     </div>
-    <div class="text-center mt-5 wow animate__animated animate__fadeIn" data-wow-delay="0.6s">
+    <div class="text-center mt-5 wow animate__animated animate__fadeIn">
         <a href="#" class="btn btn-outline-primary btn-lg rounded-pill px-4">Lihat Semua Produk <i class="fas fa-arrow-right ms-2"></i></a>
     </div>
 </section>
-<?php endif; ?>
+<?php endif; ?> -->
 
 
 <section id="newsletter" class="bg-dark text-white section-padding text-center">
-    <div class="container wow animate__animated animate__fadeIn" data-wow-delay="0.2s">
-        <h2 class="mb-4 display-5 fw-bold">Section Custom</h2>
+    <div class="container wow animate__animated animate__fadeIn">
+        <h2 class="mb-4 display-5 fw-bold">Dapatkan Berita Terbaru Langsung ke Email Anda!</h2>
         <p class="lead mb-4">
             Jangan lewatkan artikel dan rekomendasi produk terkini. Bergabunglah dengan buletin kami.
         </p>
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <form action="#" method="POST" class="d-flex flex-column flex-sm-row">
+                    <input type="email" class="form-control form-control-lg me-sm-2 mb-2 mb-sm-0 rounded-pill" placeholder="Masukkan alamat email Anda" required>
+                    <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4">Berlangganan <i class="fas fa-paper-plane ms-2"></i></button>
+                </form>
+                <small class="mt-2 d-block text-muted">Kami tidak akan pernah membagikan email Anda kepada pihak ketiga.</small>
+            </div>
+        </div>
     </div>
 </section>
 
 
 <section id="about" class="container section-padding">
-    <h2 class="text-center mb-5 display-5 fw-bold wow animate__animated animate__fadeIn" data-wow-delay="0.2s">Tentang Kami</h2>
-    <div class="row align-items-center wow animate__animated animate__fadeInUp" data-wow-delay="0.4s">
+    <h2 class="text-center mb-5 display-5 fw-bold wow animate__animated animate__fadeIn">Tentang Kami</h2>
+    <div class="row align-items-center wow animate__animated animate__fadeInUp">
         <div class="col-md-6 mb-4 mb-md-0">
             <img src="https://images.unsplash.com/photo-1542740974-9a008c5d552c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-fluid rounded shadow-lg" alt="Tentang Kami">
         </div>
@@ -144,7 +153,7 @@
 </section>
 
 <section id="contact" class="bg-primary text-white section-padding text-center">
-    <div class="container wow animate__animated animate__fadeIn" data-wow-delay="0.2s">
+    <div class="container wow animate__animated animate__fadeIn">
         <h2 class="mb-4 display-5 fw-bold">Ada Pertanyaan? Hubungi Kami!</h2>
         <p class="lead mb-4">
             Kami selalu siap membantu. Jangan ragu untuk mengirimkan pertanyaan, kritik, atau saran Anda.

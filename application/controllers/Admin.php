@@ -149,7 +149,7 @@ class Admin extends CI_Controller
 
         $judul = $this->input->post('judul', TRUE);
         $slug = url_title($judul, 'dash', true);
-        $isi = $this->input->post('isi', TRUE);
+        $isi = $this->input->post('isi', FALSE);
         $id_kategori = $this->input->post('id_kategori', TRUE);
 
         $meta_title = $this->input->post('meta_title', TRUE);
@@ -221,7 +221,7 @@ class Admin extends CI_Controller
         } else {
             $judul = $this->input->post('judul', TRUE);
             $slug = url_title($judul, 'dash', true);
-            $isi = $this->input->post('isi', TRUE);
+            $isi = $this->input->post('isi', FALSE);
             $id_kategori = $this->input->post('id_kategori', TRUE);
 
             // Ambil data SEO dari form

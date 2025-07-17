@@ -172,6 +172,134 @@
         }
         /* Custom padding for main content if using fixed navbar */
         body { padding-top: 70px; } /* Adjust based on navbar height */
+
+        /* Custom CSS for Detail Page */
+        .detail-hero-section {
+            background-color: #f8f9fa; /* Light background for hero */
+            padding: 4rem 0 2rem 0;
+            margin-bottom: 2rem;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+        .detail-hero-section h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        .detail-hero-section .post-meta {
+            font-size: 0.95rem;
+            color: #6c757d;
+            margin-bottom: 1.5rem;
+        }
+        .detail-hero-section .post-meta span {
+            margin: 0 8px;
+            display: inline-flex; /* Untuk sejajarkan ikon */
+            align-items: center;
+        }
+        .detail-hero-section .post-meta i {
+            margin-right: 5px;
+            color: #adb5bd;
+        }
+        .featured-image-container {
+            max-width: 800px;
+            margin: 0 auto 2rem auto;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .featured-image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .detail-content-body {
+            font-family: 'Georgia', serif; /* Font klasik untuk konten */
+            font-size: 1.15rem; /* Ukuran font lebih besar untuk kenyamanan membaca */
+            line-height: 1.8; /* Tinggi baris lebih lebar */
+            color: #333;
+        }
+        .detail-content-body p {
+            margin-bottom: 1.5rem;
+        }
+        .detail-content-body h1, .detail-content-body h2, .detail-content-body h3, .detail-content-body h4, .detail-content-body h5, .detail-content-body h6 {
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .detail-content-body img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin: 1.5rem auto; /* Tengah gambar */
+            display: block; /* Agar margin auto bekerja */
+        }
+        /* Responsive Video Embeds (must be in public/templates/header.php) */
+        .responsive-video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            margin: 1.5rem 0;
+            border-radius: 0.5rem;
+        }
+        .responsive-video-container iframe,
+        .responsive-video-container object,
+        .responsive-video-container embed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        .note-video-clip { /* Style from Summernote */
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Post Sidebar */
+        .post-sidebar {
+            padding-left: 1.5rem;
+            /* border-left: 1px solid #eee; */ /* Optional border */
+        }
+        .post-sidebar .card {
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,.08);
+            border-radius: 0.75rem;
+        }
+        .post-sidebar .card-header {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            border-bottom: 1px solid #eee;
+        }
+        .post-sidebar .list-group-item {
+            border: none;
+            border-bottom: 1px solid #eee;
+            padding: 0.75rem 0;
+        }
+        .post-sidebar .list-group-item:last-child {
+            border-bottom: none;
+        }
+        .post-sidebar .list-group-item a {
+            color: #343a40;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .post-sidebar .list-group-item a:hover {
+            color: #007bff;
+            text-decoration: underline;
+        }
+        .post-sidebar .badge {
+            font-size: 0.75rem;
+            padding: 0.4em 0.7em;
+        }
     </style>
 </head>
 <body>
@@ -179,7 +307,7 @@
         <nav class="navbar navbar-expand-lg navbar-light fixed-top">
             <div class="container">
                 <a class="navbar-brand" href="<?php echo base_url(); ?>">
-                    <i class="fas fa-bullhorn"></i> Boilerplate CI3
+                    <i class="fas fa-bullhorn"></i> Berita Kita
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -198,9 +326,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="<?php echo base_url(); ?>#contact">Kontak</a>
                         </li>
-                        <!-- <li class="nav-item">
+                        <li class="nav-item">
                             <a class="nav-link btn btn-primary text-white ms-lg-3 px-3 rounded-pill" href="<?php echo site_url('admin'); ?>">Admin Panel</a>
-                        </li> -->
+                        </li>
                     </ul>
                 </div>
             </div>

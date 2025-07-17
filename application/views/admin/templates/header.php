@@ -4,102 +4,210 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $title; ?> | Admin Panel</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40JuKCgxdlJvoNukFQwABnJqmtxZ9sTMlIeVAPcKWvRk4N2p9Q4/Bqf/Nf0gYn8Jd5z2R+E6Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" 
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
     <style>
+        :root {
+            --sidebar-width: 250px; /* Lebar sidebar */
+            --navbar-height: 56px;
+            --main-bg-color: #f0f2f5; /* Warna latar belakang utama */
+            --content-bg-color: #ffffff; /* Warna latar belakang konten */
+            --sidebar-bg-color: #2c3e50; /* Dark blue/grey */
+            --sidebar-link-color: #ecf0f1; /* Light grey text */
+            --sidebar-link-hover-bg: #34495e; /* Darker blue/grey on hover */
+            --sidebar-link-active-bg: #1abc9c; /* Green/Turquoise */
+            --sidebar-link-active-color: #ffffff;
+            --card-border-color: #e0e0e0;
+        }
+
         body {
-            display: flex;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--main-bg-color);
             min-height: 100vh;
-            flex-direction: column;
-            background-color: #f8f9fa; /* Latar belakang halaman */
+            display: flex;
+            flex-direction: column; /* Untuk menempatkan footer di paling bawah */
         }
-        #main-wrapper {
-            flex: 1; /* Agar konten utama memenuhi sisa tinggi */
-            padding-top: 56px; /* Offset for fixed navbar */
+
+        /* Navbar top */
+        .navbar-admin {
+            background-color: var(--content-bg-color) !important;
+            border-bottom: 1px solid var(--card-border-color);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            z-index: 1030; /* Lebih tinggi dari sidebar */
         }
-        .sidebar {
+        .navbar-admin .navbar-brand {
+            color: var(--sidebar-bg-color) !important;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+        .navbar-admin .nav-link {
+            color: #555 !important;
+        }
+        .navbar-admin .nav-link:hover {
+            color: var(--sidebar-link-active-bg) !important;
+        }
+
+        /* Sidebar */
+        .sidebar-wrapper {
             position: fixed;
-            top: 56px; /* Tinggi navbar */
+            top: var(--navbar-height);
             bottom: 0;
             left: 0;
-            z-index: 1000;
-            padding: 1rem; /* Menggunakan rem untuk konsistensi Bootstrap 5 */
-            overflow-x: hidden;
-            overflow-y: auto;
-            background-color: #343a40; /* Warna sidebar gelap */
-            border-right: 1px solid #dee2e6; /* Garis pemisah sidebar */
-            color: #fff; /* Teks default sidebar */
+            width: var(--sidebar-width);
+            background-color: var(--sidebar-bg-color);
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            padding-top: 1rem;
+            overflow-y: auto; /* Untuk scroll jika menu banyak */
+            z-index: 1020; /* Lebih rendah dari navbar */
         }
-        .sidebar .nav-link {
-            font-weight: 500;
-            color: rgba(255, 255, 255, .75);
-            padding: 0.6rem 1rem; /* Menggunakan rem */
-            border-radius: 0.25rem; /* Menggunakan rem */
-            display: flex; /* Untuk ikon dan teks sejajar */
+        .sidebar-nav .nav-item {
+            margin-bottom: 5px;
+        }
+        .sidebar-nav .nav-link {
+            display: flex;
             align-items: center;
+            padding: 10px 15px;
+            color: var(--sidebar-link-color);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 0.25rem;
+            margin: 0 10px; /* Padding samping */
         }
-        .sidebar .nav-link i {
-            margin-right: 0.5rem; /* Menggunakan rem */
+        .sidebar-nav .nav-link i {
+            margin-right: 10px;
+            font-size: 1.1rem;
         }
-        .sidebar .nav-link.active {
-            color: #fff;
-            background-color: #0d6efd; /* Warna aktif Bootstrap 5 blue */
+        .sidebar-nav .nav-link:hover {
+            background-color: var(--sidebar-link-hover-bg);
+            color: var(--sidebar-link-active-color);
         }
-        .sidebar .nav-link:hover {
-            color: #fff;
-            background-color: #0a58ca; /* Hover warna biru lebih gelap */
+        .sidebar-nav .nav-link.active {
+            background-color: var(--sidebar-link-active-bg);
+            color: var(--sidebar-link-active-color);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            font-weight: 600;
         }
-        .main-content {
-            padding: 1.5rem; /* Menggunakan rem */
-            background-color: #fff; /* Latar belakang konten utama putih */
-            min-height: calc(100vh - 120px); /* Menyesuaikan tinggi dengan footer */
-            box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
-            border-radius: .25rem;
+        
+        /* Dropdown (Sub-menu) for sidebar - using Bootstrap's own collapse/dropdown */
+        .sidebar-nav .nav-item .collapse .nav-link {
+            padding-left: 35px; /* Indent sub-menu items */
+            font-size: 0.95rem;
+            background-color: var(--sidebar-link-hover-bg);
+            border-left: 3px solid var(--sidebar-link-active-bg); /* Little highlight */
+            margin: 0 10px 0 10px;
+            border-radius: 0;
+            color: rgba(255, 255, 255, .85);
         }
-        .main-footer {
-            background-color: #343a40;
-            color: #ffffff;
-            padding: 1rem 0; /* Menggunakan rem */
+        .sidebar-nav .nav-item .collapse .nav-link.active {
+            background-color: var(--sidebar-link-active-bg);
+            color: var(--sidebar-link-active-color);
+            box-shadow: none;
+        }
+
+
+        /* Main Content Area */
+        .main-content-wrapper {
+            margin-left: var(--sidebar-width); /* Beri ruang untuk sidebar */
+            padding-top: var(--navbar-height); /* Beri ruang untuk navbar */
+            flex-grow: 1; /* Agar mengisi sisa ruang */
+            display: flex;
+            flex-direction: column;
+        }
+        .main-content-area {
+            background-color: var(--content-bg-color);
+            padding: 1.5rem;
+            margin: 1.5rem; /* Jarak dari sisi layar */
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            min-height: calc(100vh - var(--navbar-height) - 3rem - 60px); /* Menyesuaikan tinggi dengan footer dan margin */
+        }
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--card-border-color);
+        }
+        .page-header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #34495e;
+            margin-bottom: 0;
+        }
+        .page-header .breadcrumb {
+            margin-bottom: 0;
+        }
+
+        /* Flashdata Alerts */
+        .alert-fixed {
+            position: sticky; /* Or fixed, but sticky is better for scrolling */
+            top: calc(var(--navbar-height) + 15px); /* Position below navbar */
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - var(--sidebar-width) - 3rem - 30px); /* Adjusted width */
+            z-index: 1040; /* Above everything else */
+            margin: 0 auto; /* Center it */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 0.5rem;
+        }
+
+        /* Footer */
+        .main-footer-admin {
+            background-color: var(--sidebar-bg-color); /* Dark footer */
+            color: var(--sidebar-link-color);
+            padding: 1rem;
             text-align: center;
+            margin-left: var(--sidebar-width); /* Beri ruang untuk sidebar */
+            border-top: 1px solid var(--card-border-color);
         }
-        /* Penyesuaian untuk kolum konten utama agar tidak tumpang tindih dengan sidebar */
-        /* col-md-3 untuk sidebar, col-md-9 untuk konten */
-        @media (min-width: 768px) {
-            .main-content-col {
-                margin-left: 25%; /* Lebar col-md-3 */
+
+        /* Responsive Adjustments */
+        @media (max-width: 767.98px) { /* Small screens */
+            .sidebar-wrapper {
+                left: -var(--sidebar-width); /* Sembunyikan sidebar di luar layar */
+                transition: left 0.3s ease;
             }
-        }
-        /* col-lg-2 untuk sidebar, col-lg-10 untuk konten */
-        @media (min-width: 992px) {
-            .sidebar {
-                width: 16.666667%; /* col-lg-2 */
+            .sidebar-wrapper.show { /* Tampilkan saat tombol hamburger diklik */
+                left: 0;
             }
-            .main-content-col {
-                margin-left: 16.666667%; /* Sesuaikan dengan col-lg-2 */
+            .main-content-wrapper {
+                margin-left: 0; /* Content takes full width */
+            }
+            .navbar-admin .navbar-toggler {
+                display: block; /* Tampilkan toggler */
+            }
+            .alert-fixed {
+                width: calc(100% - 3rem - 30px); /* Full width minus padding */
             }
         }
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+<nav class="navbar navbar-expand-lg navbar-admin fixed-top">
     <div class="container-fluid">
         <a class="navbar-brand" href="<?php echo site_url('admin'); ?>">
-            <i class="fas fa-fw fa-tachometer-alt"></i> Admin Panel
+            <i class="fas fa-cubes me-2"></i> Admin Panel
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
+
+        <div class="collapse navbar-collapse" id="topNavbarCollapse">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="<?php echo base_url(); ?>" target="_blank">
-                        <i class="fas fa-fw fa-globe"></i> Lihat Situs
+                        <i class="fas fa-fw fa-globe me-1"></i> Lihat Situs
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="<?php echo site_url('auth/logout'); ?>">
-                        <i class="fas fa-fw fa-sign-out-alt"></i> Logout
+                        <i class="fas fa-fw fa-sign-out-alt me-1"></i> Logout
                     </a>
                 </li>
             </ul>
@@ -107,84 +215,107 @@
     </div>
 </nav>
 
-<div id="main-wrapper" class="container-fluid">
-    <div class="row">
-        <nav class="col-md-3 col-lg-2 d-none d-md-block sidebar">
-            <div class="sidebar-sticky pt-3">
-               <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <?php
-                            // Logic untuk Dashboard
-                            $dashboard_active = '';
-                            if ($this->router->fetch_class() == 'Admin' && $this->router->fetch_method() == 'index') {
-                                $dashboard_active = 'active';
-                            }
-                            // Jika ada rute default controller untuk admin, bisa juga dicek di sini
-                            // if ($this->router->fetch_class() == 'Admin' && $this->router->fetch_method() == 'index' && $this->uri->segment(2) == '') {
-                            //    $dashboard_active = 'active';
-                            // }
-                        ?>
-                        <a class="nav-link <?php echo $dashboard_active; ?>" href="<?php echo site_url('admin'); ?>">
-                            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <?php
-                            // Logic untuk Artikel (daftar, tambah, edit)
-                            $artikel_active = '';
-                            if ($this->router->fetch_class() == 'Admin' && ($this->router->fetch_method() == 'artikel_list' || $this->router->fetch_method() == 'tambah' || $this->router->fetch_method() == 'edit')) {
-                                $artikel_active = 'active';
-                            }
-                        ?>
-                        <a class="nav-link <?php echo $artikel_active; ?>" href="<?php echo site_url('admin/artikel_list'); ?>">
-                            <i class="fas fa-newspaper me-2"></i> Artikel
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <?php
-                            // Logic untuk Kategori
-                            $kategori_active = '';
-                            if ($this->router->fetch_class() == 'Kategori_admin') {
-                                $kategori_active = 'active';
-                            }
-                        ?>
-                        <a class="nav-link <?php echo $kategori_active; ?>" href="<?php echo site_url('kategori_admin'); ?>">
-                            <i class="fas fa-tags me-2"></i> Kategori
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <?php
-                            // Logic untuk Ubah Password
-                            $ubah_password_active = '';
-                            if ($this->router->fetch_class() == 'Auth' && $this->router->fetch_method() == 'ubah_password') {
-                                $ubah_password_active = 'active';
-                            }
-                        ?>
-                        <a class="nav-link <?php echo $ubah_password_active; ?>" href="<?php echo site_url('ubah_password'); ?>">
-                            <i class="fas fa-key me-2"></i> Ubah Password
-                        </a>
-                    </li>
-            </ul>
-            </div>
-        </nav>
+<div class="sidebar-wrapper collapse d-md-block" id="sidebarMenu">
+    <nav class="sidebar-nav pt-3">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <?php
+                    $current_class = $this->router->fetch_class();
+                    $current_method = $this->router->fetch_method();
+                    $dashboard_active = ($current_class == 'Admin' && $current_method == 'index') ? 'active' : '';
+                ?>
+                <a class="nav-link <?php echo $dashboard_active; ?>" href="<?php echo site_url('admin'); ?>">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+            </li>
 
-        <main role="main" class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <div class="main-content">
-                <?php if ($this->session->flashdata('success')): ?>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <?php echo $this->session->flashdata('success'); ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <?php endif; ?>
-                <?php if ($this->session->flashdata('error')): ?>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <?php echo $this->session->flashdata('error'); ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <?php endif; ?>
-                <?php if ($this->session->flashdata('error_upload')): ?>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <?php echo $this->session->flashdata('error_upload'); ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <?php endif; ?>
+            <li class="nav-item">
+                <?php
+                    $artikel_main_active = '';
+                    $artikel_collapse_show = '';
+                    if ($current_class == 'Admin' && in_array($current_method, ['artikel_list', 'tambah', 'edit'])) {
+                        $artikel_main_active = 'active'; // Menandai menu utama Artikel
+                        $artikel_collapse_show = 'show'; // Membuka sub-menu jika di salah satu halaman artikel
+                    }
+                ?>
+                <a class="nav-link <?php echo $artikel_main_active; ?>" data-bs-toggle="collapse" href="#artikelSubmenu" role="button" aria-expanded="<?php echo ($artikel_collapse_show == 'show') ? 'true' : 'false'; ?>" aria-controls="artikelSubmenu">
+                    <i class="fas fa-newspaper"></i> Artikel <i class="fas fa-chevron-down ms-auto"></i>
+                </a>
+                <div class="collapse <?php echo $artikel_collapse_show; ?>" id="artikelSubmenu">
+                    <ul class="nav flex-column ps-3">
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo ($current_class == 'Admin' && $current_method == 'artikel_list') ? 'active' : ''; ?>" href="<?php echo site_url('admin/artikel_list'); ?>">
+                                <i class="fas fa-list"></i> Semua Artikel
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo ($current_class == 'Admin' && $current_method == 'tambah') ? 'active' : ''; ?>" href="<?php echo site_url('admin/tambah'); ?>">
+                                <i class="fas fa-plus"></i> Tambah Baru
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            
+            <li class="nav-item">
+                <?php
+                    $kategori_active = ($current_class == 'kategori_admin') ? 'active' : '';
+                ?>
+                <a class="nav-link <?php echo $kategori_active; ?>" href="<?php echo site_url('kategori_admin'); ?>">
+                    <i class="fas fa-tags"></i> Kategori
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <?php
+                    $settings_main_active = '';
+                    $settings_collapse_show = '';
+                    if (/* $current_class == 'Auth' &&  */($current_method == 'ubah_password')) { // Jika ada setting lain bisa ditambahkan di array
+                        //$settings_main_active = 'active';
+                        $settings_collapse_show = 'show';
+                    }
+                ?>
+                <a class="nav-link <?php echo $settings_main_active; ?>" data-bs-toggle="collapse" href="#settingsSubmenu" role="button" aria-expanded="<?php echo ($settings_collapse_show == 'show') ? 'true' : 'false'; ?>" aria-controls="settingsSubmenu">
+                    <i class="fas fa-cog"></i> Pengaturan <i class="fas fa-chevron-down ms-auto"></i>
+                </a>
+                <div class="collapse <?php echo $settings_collapse_show; ?>" id="settingsSubmenu">
+                    <ul class="nav flex-column ps-3">
+                        <li class="nav-item">
+                            <?php
+                                $ubah_password_active = (/* $current_class == 'Auth' && */ $current_method == 'ubah_password') ? 'active' : '';
+                            ?>
+                            <a class="nav-link <?php echo $ubah_password_active; ?>" href="<?php echo site_url('ubah_password'); ?>">
+                                <i class="fas fa-key"></i> Ubah Password
+                            </a>
+                        </li>
+                        </ul>
+                </div>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<div class="main-content-wrapper">
+    <div class="main-content-area">
+        <div class="page-header">
+            <h1><?php echo $title; ?></h1>
+            </div>
+
+        <?php if ($this->session->flashdata('success')): ?>
+            <div class="alert alert-success alert-dismissible fade show alert-fixed" role="alert">
+                <?php echo $this->session->flashdata('success'); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+        <?php if ($this->session->flashdata('error')): ?>
+            <div class="alert alert-danger alert-dismissible fade show alert-fixed" role="alert">
+                <?php echo $this->session->flashdata('error'); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+        <?php if ($this->session->flashdata('error_upload')): ?>
+            <div class="alert alert-danger alert-dismissible fade show alert-fixed" role="alert">
+                <?php echo $this->session->flashdata('error_upload'); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>

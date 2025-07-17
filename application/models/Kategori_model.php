@@ -8,11 +8,11 @@ class Kategori_model extends CI_Model
     {
         parent::__construct();
         $this->load->database(); // Memuat database di konstruktor model
-         if (!$this->session->userdata('logged_in')) {
-            // Jika belum login, redirect ke halaman login
-            $this->session->set_flashdata('error', 'Anda harus login untuk mengakses halaman ini.');
-            redirect('auth/login'); // Atau 'login' jika Anda sudah meroutingnya ke root
-        }
+        // HAPUS Bagian ini untuk public/frontend, karena Auth/login tidak relevan di sini
+        // if (!$this->session->userdata('logged_in')) {
+        //    $this->session->set_flashdata('error', 'Anda harus login untuk mengakses halaman ini.');
+        //    redirect('auth/login');
+        // }
     }
 
     // Mengambil semua kategori (untuk dropdown atau daftar lengkap)
@@ -71,6 +71,22 @@ class Kategori_model extends CI_Model
         $this->db->limit($limit, $start);
         $query = $this->db->get('kategori');
 
+        return $query->result_array();
+    }
+
+    // Method baru untuk mengambil kategori populer
+    public function get_popular_categories($limit = 4)
+    {
+        // Contoh sederhana: ambil kategori yang memiliki banyak artikel (jika ada kolom hit_count atau jumlah artikel)
+        // Jika tidak ada, bisa diorder by ID atau nama
+        $this->db->select('id, nama_kategori AS nama, slug_kategori AS slug'); // Alias untuk nama dan slug
+        // Jika Anda punya tabel 'artikel' dan ingin menghitung artikel per kategori:
+        // $this->db->join('artikel', 'artikel.id_kategori = kategori.id', 'left');
+        // $this->db->group_by('kategori.id');
+        // $this->db->order_by('COUNT(artikel.id)', 'DESC'); // Mengurutkan berdasarkan jumlah artikel
+        $this->db->order_by('id', 'ASC'); // Sebagai contoh, urutkan berdasarkan ID
+        $this->db->limit($limit);
+        $query = $this->db->get('kategori');
         return $query->result_array();
     }
 }
